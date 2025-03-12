@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Zenject;
 
@@ -25,9 +24,6 @@ namespace MarketTestCase
             _input = input;
             _pickEventMediator = pickEventMediator;
         }
-
-        public event Action ItemPicked;
-        public event Action ItemThrowed;
 
         private void Awake()
         {

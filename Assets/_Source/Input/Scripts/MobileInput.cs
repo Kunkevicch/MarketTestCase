@@ -35,6 +35,7 @@ namespace MarketTestCase
         private void OnEnable()
         {
             StartCoroutine(MoveToDirectionRoutine());
+
             _touchPanel.PointerMove += OnPointerMoved;
             _touchPanel.PointerClick += OnPointerClicked;
             _throwButton.onClick.AddListener(() => ThrowInput?.Invoke());
@@ -72,17 +73,13 @@ namespace MarketTestCase
         private void OnPointerMoved(Vector2 lookDirection)
         => RotationInput?.Invoke(lookDirection);
 
-
         private void OnPointerClicked(Vector2 touchPosition)
         => TouchInput?.Invoke(touchPosition);
 
         private void OnItemPicked()
         => _throwButton.gameObject.SetActive(true);
 
-
         private void OnItemThrowed()
         => _throwButton.gameObject.SetActive(false);
-
-
     }
 }
