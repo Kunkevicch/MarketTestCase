@@ -13,12 +13,12 @@ namespace MarketTestCase
         private Joystick _joystickMove;
         private IToucheable _touchPanel;
 
-        private IPicker _picker;
+        private IPickEventMediator _pickEventMediator;
 
         [Inject]
-        public void Construct(IPicker picker)
+        public void Construct(IPickEventMediator eventMediator)
         {
-            _picker = picker;
+            _pickEventMediator = eventMediator;
         }
 
         public event Action<Vector2> MoveInput;
@@ -38,8 +38,8 @@ namespace MarketTestCase
             _touchPanel.PointerMove += OnPointerMoved;
             _touchPanel.PointerClick += OnPointerClicked;
             _throwButton.onClick.AddListener(() => ThrowInput?.Invoke());
-            _picker.ItemPicked += OnItemPicked;
-            _picker.ItemThrowed += OnItemThrowed;
+            _pickEventMediator.AddListener(PickEventType.Throwed, OnItemThrowed);
+            _pickEventMediator.AddListener(PickEventType.Picked, OnItemPicked);
         }
 
         private void OnDisable()
@@ -49,6 +49,8 @@ namespace MarketTestCase
             _touchPanel.PointerMove -= OnPointerMoved;
             _touchPanel.PointerClick -= OnPointerClicked;
             _throwButton.onClick.RemoveListener(() => ThrowInput?.Invoke());
+            _pickEventMediator.RemoveListener(PickEventType.Throwed, OnItemThrowed);
+            _pickEventMediator.RemoveListener(PickEventType.Picked, OnItemPicked);
         }
 
         private IEnumerator MoveToDirectionRoutine()

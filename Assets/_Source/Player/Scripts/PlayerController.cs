@@ -5,7 +5,7 @@ using Zenject;
 namespace MarketTestCase
 {
     [RequireComponent(typeof(CharacterController))]
-    public class PlayerController : MonoBehaviour, IPicker
+    public class PlayerController : MonoBehaviour
     {
         [SerializeField] private PlayerConfig _config;
 
@@ -17,11 +17,13 @@ namespace MarketTestCase
 
         private IInput _input;
         private CharacterController _controller;
+        private IPickEventMediator _pickEventMediator;
 
         [Inject]
-        public void Construct(IInput input)
+        public void Construct(IInput input, IPickEventMediator pickEventMediator)
         {
             _input = input;
+            _pickEventMediator = pickEventMediator;
         }
 
         public event Action ItemPicked;
@@ -88,7 +90,7 @@ namespace MarketTestCase
                 {
                     _currentPickableItem = pickable;
                     _currentPickableItem.Pick(_hand);
-                    ItemPicked?.Invoke();
+                    _pickEventMediator.SendMessage(PickEventType.Picked);
                 }
             }
         }
@@ -99,7 +101,7 @@ namespace MarketTestCase
                 return;
             _currentPickableItem.Throw(_hand.forward, _config.ThrowForce);
             _currentPickableItem = null;
-            ItemThrowed?.Invoke();
+            _pickEventMediator.SendMessage(PickEventType.Throwed);
         }
     }
 }
